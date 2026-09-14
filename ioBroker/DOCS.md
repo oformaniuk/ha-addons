@@ -54,11 +54,11 @@ The `buanet` docker image contains some pretty useful startup script.
 To ensure data stays persistent across restarts, the add-on redirects ioBroker's working directory
 from `/opt/iobroker` to `/data`.
 
-Home Assistant automatically persists `/data` inside the container. The `"map": ["addon_config:rw"]` 
-directive in config.json makes this accessible on the host at `/addon_configs/<addon-slug>/`.
+Home Assistant automatically persists `/data` inside the container. The `app_config`
+map makes this accessible on the host as the app's persistent configuration storage.
 
-This means ioBroker data ends up at `/addon_configs/iobroker/` on the host and survives upgrades/restarts.
+This means ioBroker data survives upgrades and restarts.
 
-Backups are stored under `/data/backups` (host: `/addon_configs/iobroker/backups`).
+Backups are stored under `/data/backups`.
 
 [1]: https://github.com/MaxWinterstein/homeassistant-addons/issues/21

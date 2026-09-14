@@ -8,8 +8,6 @@ WORKDIR /src
 RUN case "$BUILD_ARCH" in \
       aarch64) export GOARCH=arm64 ;; \
       amd64) export GOARCH=amd64 ;; \
-      armhf) export GOARCH=arm GOARM=6 ;; \
-      armv7) export GOARCH=arm GOARM=7 ;; \
       *) echo "Unsupported BUILD_ARCH: $BUILD_ARCH" >&2; exit 1 ;; \
     esac \
  && CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /hab .
@@ -57,8 +55,6 @@ RUN apt-get update \
 RUN case "$BUILD_ARCH" in \
       aarch64) ARCH=aarch64 ;; \
       amd64) ARCH=x86_64 ;; \
-      armhf) ARCH=armhf ;; \
-      armv7) ARCH=arm ;; \
       *) echo "Unsupported BUILD_ARCH: $BUILD_ARCH" >&2; exit 1 ;; \
     esac \
  && curl -fsSL "https://github.com/tsl0922/ttyd/releases/download/${TTYD_VERSION}/ttyd.${ARCH}" -o /usr/bin/ttyd \
@@ -95,5 +91,5 @@ LABEL \
   io.hass.name="Codex" \
   io.hass.description="AI coding agent for editing Home Assistant configuration" \
   io.hass.type="app" \
-  io.hass.arch="aarch64|amd64|armhf|armv7" \
+  io.hass.arch="aarch64|amd64" \
   io.hass.version="${BUILD_VERSION}"

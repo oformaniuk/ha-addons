@@ -7,8 +7,6 @@ url: "https://github.com/openai/codex"
 arch:
   - aarch64
   - amd64
-  - armhf
-  - armv7
 startup: application
 init: false
 
@@ -32,7 +30,7 @@ map:
   - type: homeassistant_config
     path: /homeassistant
     read_only: false
-  - type: addon_config
+  - type: app_config
     path: /data/.codex/
     read_only: false
 

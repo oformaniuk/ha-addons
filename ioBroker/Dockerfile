@@ -8,7 +8,7 @@ RUN chmod a+x /opt/scripts/iobroker_startup.sh
 
 LABEL \
   io.hass.name="ioBroker" \
-  io.hass.description="ioBroker using the official Docker image, persisting into addon_config" \
+  io.hass.description="ioBroker using the official Docker image, persisting into app config storage" \
   io.hass.type="app" \
-  io.hass.arch="armv7|aarch64|amd64" \
+  io.hass.arch="aarch64|amd64" \
   io.hass.version="${BUILD_VERSION}"

@@ -2,8 +2,8 @@
 
 # begin hass addon persistent data block
 # Home Assistant add-ons persist /data automatically.
-# The "map": ["addon_config:rw"] in config.json provides host access at /addon_configs/<slug>/
-# We keep ioBroker data under /data (which is accessible on host via the addon_config map).
+# The app_config map provides persistent app configuration storage at /data.
+# We keep ioBroker data under /data so it survives upgrades and restarts.
 echo "Configuring persistent ioBroker data dir"
 
 PERSIST_BASE="/data"
