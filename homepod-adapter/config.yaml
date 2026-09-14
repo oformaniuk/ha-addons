@@ -1,7 +1,7 @@
 name: "HomePod Adapter"
 slug: "homepod_adapter"
 description: "Receives HomePod sensor data and forwards it to Home Assistant webhooks."
-version: "1.0.0"
+version: "1.0.1"
 url: "https://github.com/oformaniuk/ha-addons/tree/main/homepod-adapter"
 arch:
   - aarch64

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0-bookworm-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_ARCH
 WORKDIR /src
 
