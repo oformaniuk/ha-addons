@@ -1,7 +1,7 @@
-name: "HomePod Adapter"
+name: "HomePod MQTT Bridge"
 slug: "homepod_adapter"
 description: "Receives HomePod sensor data and creates MQTT-discovered devices and sensors."
-version: "2.0.1"
+version: "2.0.2"
 url: "https://github.com/oformaniuk/ha-addons/tree/main/homepod-adapter"
 arch:
   - aarch64

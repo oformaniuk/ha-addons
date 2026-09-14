@@ -1,4 +1,4 @@
-# HomePod Adapter
+# HomePod MQTT Bridge
 
 This Home Assistant add-on receives temperature and humidity data at
 `POST /HomePod/<guid>` and creates a Home Assistant MQTT-discovered HomePod

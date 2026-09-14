@@ -13,7 +13,7 @@ MCP integration, LSP helpers, and persistent sessions.
 
 ioBroker using the official Docker image, persisting into add-on config.
 
-### HomePod Adapter
+### HomePod MQTT Bridge
 
 Receives HomePod sensor data and forwards it to Home Assistant webhooks. Add
 the HomePod names and webhook GUIDs in the add-on Configuration tab.
