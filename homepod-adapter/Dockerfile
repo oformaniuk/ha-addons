@@ -23,6 +23,12 @@ RUN case "$BUILD_ARCH" in \
 FROM ghcr.io/home-assistant/base-debian:bookworm
 ARG BUILD_VERSION
 WORKDIR /app
+
+# Self-contained .NET still uses ICU for culture/globalization support.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libicu72 \
+ && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /out/HomeAssistantCompanion /usr/local/bin/homepod-adapter
 COPY rootfs /
 RUN chmod +x /usr/local/bin/homepod-adapter \
