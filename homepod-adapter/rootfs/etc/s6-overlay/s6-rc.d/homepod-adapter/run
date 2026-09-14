@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bashio
+set -euo pipefail
+
+exec /usr/local/bin/homepod-adapter --urls http://0.0.0.0:8080

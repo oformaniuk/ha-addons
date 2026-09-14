@@ -1,0 +1,58 @@
+configuration:
+  mcp_enabled:
+    name: Enable MCP Home Assistant integration
+    description: Enable the Codex MCP server for Home Assistant states, services, templates, logs, validated config writes, and hab gateway calls.
+  lsp_enabled:
+    name: Enable LSP Home Assistant integration
+    description: Enable the YAML language helper service for Home Assistant-aware editing support.
+  ui_mode:
+    name: UI mode
+    description: Choose whether the web terminal opens the persistent Codex TUI session or a persistent login shell.
+  terminal_theme:
+    name: Terminal theme
+    description: Color scheme used by the browser terminal.
+  font_size:
+    name: Font size
+    description: Terminal font size in pixels.
+  cursor_style:
+    name: Cursor style
+    description: Terminal cursor shape.
+  cursor_blink:
+    name: Blinking cursor
+    description: Enable cursor blinking in the web terminal.
+  codex_model:
+    name: Codex model
+    description: Optional default Codex model. Leave empty to use the Codex CLI default.
+  codex_model_provider:
+    name: Codex model provider
+    description: Optional Codex model provider name written to config.toml. Leave empty to omit model_provider.
+  custom_model_providers:
+    name: Custom model providers
+    description: Structured custom Codex model providers rendered into config.toml. Use Codex model provider to select one.
+  codex_approval_policy:
+    name: Codex approval policy
+    description: Controls when Codex asks before running commands or making changes.
+  codex_sandbox_mode:
+    name: Codex sandbox mode
+    description: Controls the filesystem/network sandbox policy passed to Codex. Use danger-full-access in Home Assistant add-ons unless the container has bubblewrap-compatible privileges.
+  codex_default_permissions:
+    name: Codex default permissions
+    description: Default permission preset written to Codex config.toml.
+  ssh_enabled:
+    name: Enable SSH
+    description: Enable optional direct SSH access to the same persistent session on port 2222.
+  ssh_public_key:
+    name: SSH public key
+    description: Authorized public key for the codex SSH user. Public key authentication is preferred.
+  ssh_password:
+    name: SSH password
+    description: Optional password for the codex SSH user. Leave empty to disable password login.
+  access_token:
+    name: Home Assistant long-lived access token
+    description: Optional token for tools that need direct Home Assistant Core API access beyond the Supervisor token.
+  env_vars:
+    name: Environment variables
+    description: Custom environment variables exposed to Codex and terminal shells after restart.
+  codex_config_extra:
+    name: Extra Codex config TOML
+    description: Advanced TOML appended verbatim to /data/.codex/config.toml after generated settings.

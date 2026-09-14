@@ -1,0 +1,30 @@
+#!/usr/bin/with-contenv bashio
+set -euo pipefail
+
+if bashio::config.true 'ssh_enabled'; then
+  /usr/sbin/sshd -D -e &
+  bashio::log.info "SSH enabled on port 2222"
+fi
+
+THEME=$(bashio::config 'terminal_theme')
+FONT_SIZE=$(bashio::config 'font_size')
+CURSOR_STYLE=$(bashio::config 'cursor_style')
+CURSOR_BLINK=$(bashio::config 'cursor_blink')
+UI_MODE=$(bashio::config 'ui_mode')
+
+CMD="/usr/local/bin/codex-session"
+if [[ "$UI_MODE" == "shell" ]]; then
+  CMD="/usr/local/bin/codex-shell-session"
+fi
+
+# ttyd option names are intentionally conservative for compatibility with 1.7.x.
+exec ttyd \
+  --port 8099 \
+  --interface 0.0.0.0 \
+  --writable \
+  --terminal-type xterm-256color \
+  --client-option "theme=${THEME}" \
+  --client-option "fontSize=${FONT_SIZE}" \
+  --client-option "cursorStyle=${CURSOR_STYLE}" \
+  --client-option "cursorBlink=${CURSOR_BLINK}" \
+  "$CMD"

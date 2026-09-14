@@ -1,0 +1,29 @@
+name: "HomePod Adapter"
+slug: "homepod_adapter"
+description: "Receives HomePod sensor data and forwards it to Home Assistant webhooks."
+version: "1.0.0"
+url: "https://github.com/oformaniuk/ha-addons/tree/main/homepod-adapter"
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+init: false
+
+# Lets the add-on forward sensor readings through the Supervisor's HA Core proxy.
+homeassistant_api: true
+
+# Expose the webhook receiver for HomePods or their bridge to call.
+ports:
+  8080/tcp: 8080
+ports_description:
+  8080/tcp: "HomePod webhook receiver"
+watchdog: "tcp://[HOST]:[PORT:8080]"
+
+options:
+  homepods: []
+
+schema:
+  homepods:
+    - name: str
+      guid: str

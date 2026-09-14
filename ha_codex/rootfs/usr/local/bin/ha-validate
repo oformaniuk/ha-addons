@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /homeassistant
+python3 - <<'PY'
+from pathlib import Path
+import sys, subprocess
+try:
+    import yaml
+except Exception:
+    yaml = None
+files = list(Path('.').glob('*.yaml')) + list(Path('.').glob('*.yml'))
+if yaml:
+    for f in files:
+        try:
+            yaml.safe_load(f.read_text())
+        except Exception as e:
+            print(f"YAML error in {f}: {e}", file=sys.stderr)
+            sys.exit(1)
+    print(f"YAML syntax OK for {len(files)} top-level YAML files")
+else:
+    print('PyYAML not installed; skipping static YAML parse')
+PY
+if command -v hab >/dev/null 2>&1; then
+  echo "hab is available. For full HA validation, use Home Assistant UI or hab/system commands supported by your HA version."
+fi

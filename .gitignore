@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+*.tmp
+
+# Home Assistant local build artifacts
+*.tar
+*.tar.gz
+
+# .NET local build artifacts
+**/bin/
+**/obj/

@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+CONFIG_DIR="${CODEX_HOME:-$HOME/.codex}"
+CONFIG_FILE="${CONFIG_DIR}/config.toml"
+usage() {
+  cat <<'USAGE'
+Usage: ha-mcp <command>
+
+Commands:
+  enable    Enable the Home Assistant MCP server in Codex config.toml
+  disable   Disable the Home Assistant MCP server in Codex config.toml
+  status    Show current MCP status
+  test      Test Home Assistant API and MCP stdio startup
+USAGE
+}
+ensure_config() { mkdir -p "$CONFIG_DIR"; touch "$CONFIG_FILE"; }
+enable_mcp() {
+  ensure_config
+  python3 - <<'PY'
+from pathlib import Path
+p = Path.home()/'.codex'/'config.toml'
+s = p.read_text() if p.exists() else ''
+block='''\n[mcp_servers.homeassistant]\nenabled = true\ncommand = "node"\nargs = ["/opt/ha-mcp-server/index.js"]\ncwd = "/homeassistant"\nstartup_timeout_sec = 15\ntool_timeout_sec = 90\nenv_vars = ["SUPERVISOR_TOKEN", "HA_ACCESS_TOKEN"]\n'''
+if '[mcp_servers.homeassistant]' not in s:
+    s += block
+else:
+    lines=[]; inside=False
+    for line in s.splitlines():
+        if line.strip() == '[mcp_servers.homeassistant]': inside=True
+        elif inside and line.startswith('['): inside=False
+        if inside and line.strip().startswith('enabled ='):
+            line='enabled = true'
+        lines.append(line)
+    s='\n'.join(lines)+'\n'
+p.write_text(s)
+PY
+  echo "Home Assistant MCP server enabled. Restart Codex if it is already running."
+}
+disable_mcp() {
+  ensure_config
+  python3 - <<'PY'
+from pathlib import Path
+p = Path.home()/'.codex'/'config.toml'
+s = p.read_text() if p.exists() else ''
+lines=[]; inside=False
+for line in s.splitlines():
+    if line.strip() == '[mcp_servers.homeassistant]': inside=True
+    elif inside and line.startswith('['): inside=False
+    if inside and line.strip().startswith('enabled ='):
+        line='enabled = false'
+    lines.append(line)
+p.write_text('\n'.join(lines)+'\n')
+PY
+  echo "Home Assistant MCP server disabled. Restart Codex if it is already running."
+}
+status_mcp() {
+  ensure_config
+  if grep -A8 '^\[mcp_servers\.homeassistant\]' "$CONFIG_FILE" | grep -q 'enabled = true'; then
+    echo "Home Assistant MCP server: ENABLED"
+  else
+    echo "Home Assistant MCP server: DISABLED"
+  fi
+  echo "Config file: $CONFIG_FILE"
+}
+test_mcp() {
+  if [ -z "${SUPERVISOR_TOKEN:-}" ]; then echo "SUPERVISOR_TOKEN not set" >&2; exit 1; fi
+  code=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" http://supervisor/core/api/)
+  echo "Home Assistant API HTTP status: $code"
+  echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ha-mcp-test","version":"1.0"}}}' | timeout 10s node /opt/ha-mcp-server/index.js | head -1
+}
+case "${1:-}" in
+  enable) enable_mcp ;;
+  disable) disable_mcp ;;
+  status) status_mcp ;;
+  test) test_mcp ;;
+  help|-h|--help|'') usage ;;
+  *) echo "Unknown command: $1" >&2; usage; exit 1 ;;
+esac

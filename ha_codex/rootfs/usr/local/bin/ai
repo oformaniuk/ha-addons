@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -n "${CODEX_DTACH_SESSION:-}" || "$#" -gt 0 ]]; then
+  exec codex --dangerously-bypass-approvals-and-sandbox "$@"
+fi
+
+exec /usr/local/bin/codex-session

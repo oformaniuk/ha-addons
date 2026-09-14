@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export HOME=/data
+export CODEX_HOME=/data/.codex
+export XDG_DATA_HOME=/data/.local/share
+export XDG_CONFIG_HOME=/data/.config
+export XDG_CACHE_HOME=/data/.cache
+export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+export EDITOR=/usr/bin/nano
+export VISUAL=/usr/bin/nano
+export GIT_EDITOR=/usr/bin/nano
+export SUDO_EDITOR=/usr/bin/nano
+[ -f /data/.env_vars ] && source /data/.env_vars
+cd /homeassistant
+
+BLUE='\033[38;2;29;153;243m'
+GREEN='\033[38;2;17;209;22m'
+YELLOW='\033[38;2;246;116;0m'
+CYAN='\033[38;2;26;188;156m'
+WHITE='\033[38;2;252;252;252m'
+GRAY='\033[38;2;127;140;141m'
+BOLD='\033[1m'
+NC='\033[0m'
+ADDON_VERSION=$(cat /data/.addon_version 2>/dev/null || echo unknown)
+
+if [ ! -f "${HOME}/.gitconfig" ]; then
+  git config --global init.defaultBranch main 2>/dev/null || true
+  git config --global safe.directory /homeassistant 2>/dev/null || true
+fi
+
+clear || true
+echo ""
+echo -e "${BLUE}${BOLD}Codex${NC} ${GRAY}Home Assistant add-on v${ADDON_VERSION}${NC}"
+echo -e "${GRAY}AI-powered coding agent for Home Assistant configuration${NC}"
+echo ""
+echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
+echo ""
+echo -e "${WHITE}Working directory:${NC} ${CYAN}/homeassistant${NC}"
+echo -e "${GRAY}First time? Run ${NC}${GREEN}codex login${NC}${GRAY} if Codex prompts for authentication.${NC}"
+echo -e "${GRAY}Shortcut:${NC} ${GREEN}ai${NC}${GRAY} opens or reattaches the persistent Codex session.${NC}"
+echo -e "${GRAY}Detach/reconnect persistence is provided by ${NC}${GREEN}dtach${NC}${GRAY}; no tmux is installed.${NC}"
+echo ""
+
+codex --dangerously-bypass-approvals-and-sandbox || true
+
+echo ""
+echo -e "${GRAY}────────────────────────────────────────────────────────────${NC}"
+echo ""
+echo -e "${WHITE}Dropped to shell.${NC} Working directory: ${CYAN}/homeassistant${NC}"
+echo ""
+echo -e "${BOLD}Commands${NC}"
+echo -e "  ${GREEN}codex${NC}              Restart the AI coding agent"
+echo -e "  ${GREEN}ai${NC}                 Open or reattach the persistent Codex session"
+echo -e "  ${GREEN}ha-logs core${NC}       View Home Assistant Core logs"
+echo -e "  ${GREEN}ha-mcp status${NC}      Check Codex MCP configuration"
+echo -e "  ${GREEN}hab --help${NC}         HA admin CLI"
+echo -e "  ${GREEN}ha-validate${NC}        Run HA config validation helpers"
+echo ""
+exec bash --login

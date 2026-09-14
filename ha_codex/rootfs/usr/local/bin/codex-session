@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export HOME=/data
+export CODEX_HOME=/data/.codex
+export XDG_DATA_HOME=/data/.local/share
+export XDG_CONFIG_HOME=/data/.config
+export XDG_CACHE_HOME=/data/.cache
+export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+export EDITOR=/usr/bin/nano
+export VISUAL=/usr/bin/nano
+export GIT_EDITOR=/usr/bin/nano
+export SUDO_EDITOR=/usr/bin/nano
+[ -f /data/.env_vars ] && source /data/.env_vars
+mkdir -p /data/sessions "$CODEX_HOME" "$XDG_DATA_HOME" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME"
+cd /homeassistant
+
+# dtach provides simple detach/reattach persistence without tmux.
+exec dtach -A /data/sessions/codex-main.sock -r winch env CODEX_DTACH_SESSION=codex-main /usr/local/bin/codex-wrapper
