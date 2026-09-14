@@ -31,6 +31,10 @@ services
     .AddOptions<MqttOptions>()
     .Bind(builder.Configuration);
 
+services
+    .AddOptions<EndpointSecurityOptions>()
+    .Bind(builder.Configuration);
+
 services.AddSingleton<IMqttDiscoveryService, MqttDiscoveryService>();
 
 var app = builder.Build();

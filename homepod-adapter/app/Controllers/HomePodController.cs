@@ -1,6 +1,8 @@
 namespace HomeAssistantCompanion.Controllers;
 
 using System.Collections.Concurrent;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using HomeAssistantCompanion.Model;
 using HomeAssistantCompanion.Options;
@@ -17,16 +19,19 @@ public class HomePodController : ControllerBase
     private readonly ILogger<HomePodController> _logger;
     private readonly IMqttDiscoveryService _mqttDiscoveryService;
     private readonly IOptions<HomePodOptions> _homePodOptions;
+    private readonly IOptions<EndpointSecurityOptions> _endpointSecurityOptions;
 
     public HomePodController(
         ILogger<HomePodController> logger,
         IMqttDiscoveryService mqttDiscoveryService,
-        IOptions<HomePodOptions> homePodOptions
+        IOptions<HomePodOptions> homePodOptions,
+        IOptions<EndpointSecurityOptions> endpointSecurityOptions
     )
     {
         _logger = logger;
         _mqttDiscoveryService = mqttDiscoveryService;
         _homePodOptions = homePodOptions;
+        _endpointSecurityOptions = endpointSecurityOptions;
     }
 
     [HttpPost("{id}", Name = "Post HomePod data")]
@@ -35,6 +40,13 @@ public class HomePodController : ControllerBase
         [FromBody] Sensor sensor
     )
     {
+        var configuredToken = _endpointSecurityOptions.Value.Token;
+        if (!string.IsNullOrWhiteSpace(configuredToken) && !HasValidToken(configuredToken))
+        {
+            _logger.LogWarning("Rejected unauthenticated HomePod request for GUID [{id}]", id);
+            return Unauthorized();
+        }
+
         var homePod = _homePodOptions.Value.HomePods.FirstOrDefault(homePod =>
             string.Equals(homePod.Guid, id.ToString(), StringComparison.OrdinalIgnoreCase));
 
@@ -95,5 +107,17 @@ public class HomePodController : ControllerBase
         await _mqttDiscoveryService.PublishSensorData(homePod, sensor, HttpContext.RequestAborted);
 
         return Ok();
+    }
+
+    private bool HasValidToken(string configuredToken)
+    {
+        var authorization = Request.Headers.Authorization.ToString();
+        var suppliedToken = authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+            ? authorization["Bearer ".Length..]
+            : string.Empty;
+
+        return CryptographicOperations.FixedTimeEquals(
+            Encoding.UTF8.GetBytes(configuredToken),
+            Encoding.UTF8.GetBytes(suppliedToken));
     }
 }

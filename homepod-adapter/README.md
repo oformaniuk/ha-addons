@@ -17,6 +17,13 @@ connected to Home Assistant. The default host, `core-mosquitto`, works with the
 official Mosquitto broker add-on. MQTT Discovery must be enabled in Home
 Assistant (the default).
 
+Optionally set a long, random **Endpoint token** in the add-on Configuration
+tab. When set, the sender must include it as a Bearer token, for example:
+
+```http
+Authorization: Bearer <endpoint-token>
+```
+
 Only GUIDs in this list are accepted. Configure the sender to call
 `http://<home-assistant-host>:8080/HomePod/<guid>` with a JSON body such as
 `{"temperature": 21.5, "humidity": 43}`.
