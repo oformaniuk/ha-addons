@@ -15,17 +15,17 @@ public class HomePodController : ControllerBase
     private static readonly ConcurrentDictionary<WebhookId, Sensor> Sensors = new();
 
     private readonly ILogger<HomePodController> _logger;
-    private readonly IHomeAssistantService _homeAssistantService;
+    private readonly IMqttDiscoveryService _mqttDiscoveryService;
     private readonly IOptions<HomePodOptions> _homePodOptions;
 
     public HomePodController(
         ILogger<HomePodController> logger,
-        IHomeAssistantService homeAssistantService,
+        IMqttDiscoveryService mqttDiscoveryService,
         IOptions<HomePodOptions> homePodOptions
     )
     {
         _logger = logger;
-        _homeAssistantService = homeAssistantService;
+        _mqttDiscoveryService = mqttDiscoveryService;
         _homePodOptions = homePodOptions;
     }
 
@@ -92,7 +92,7 @@ public class HomePodController : ControllerBase
         {
             existingSensor.Temperature = sensor.Temperature;
         }
-        await _homeAssistantService.SendWebHook(id, sensor);
+        await _mqttDiscoveryService.PublishSensorData(homePod, sensor, HttpContext.RequestAborted);
 
         return Ok();
     }

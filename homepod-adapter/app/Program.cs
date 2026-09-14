@@ -2,8 +2,6 @@ using System.Text.Json.Serialization;
 using DateOnlyTimeOnly.AspNet.Converters;
 using HomeAssistantCompanion.Options;
 using HomeAssistantCompanion.Services;
-using LiteDB.Async;
-using Microsoft.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,17 +23,15 @@ services.AddControllers().AddJsonOptions(static options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 
-services.AddSingleton<IHomeAssistantService, HomeAssistantService>();
-
-services
-    .AddOptions<HomeAssistantOptions>()
-    .Bind(builder.Configuration.GetSection("HomeAssistant"));
-
 services
     .AddOptions<HomePodOptions>()
     .Bind(builder.Configuration);
 
-services.AddHttpClient();
+services
+    .AddOptions<MqttOptions>()
+    .Bind(builder.Configuration);
+
+services.AddSingleton<IMqttDiscoveryService, MqttDiscoveryService>();
 
 var app = builder.Build();
 

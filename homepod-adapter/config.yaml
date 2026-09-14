@@ -1,7 +1,7 @@
 name: "HomePod Adapter"
 slug: "homepod_adapter"
-description: "Receives HomePod sensor data and forwards it to Home Assistant webhooks."
-version: "1.0.2"
+description: "Receives HomePod sensor data and creates MQTT-discovered devices and sensors."
+version: "2.0.0"
 url: "https://github.com/oformaniuk/ha-addons/tree/main/homepod-adapter"
 arch:
   - aarch64
@@ -10,8 +10,8 @@ startup: application
 boot: auto
 init: false
 
-# Lets the add-on forward sensor readings through the Supervisor's HA Core proxy.
-homeassistant_api: true
+breaking_versions:
+  - "2.0.0"
 
 # Expose the webhook receiver for HomePods or their bridge to call.
 ports:
@@ -21,9 +21,19 @@ ports_description:
 watchdog: "tcp://[HOST]:[PORT:8080]"
 
 options:
+  mqtt_host: "core-mosquitto"
+  mqtt_port: 1883
+  mqtt_username: ""
+  mqtt_password: ""
+  mqtt_discovery_prefix: "homeassistant"
   homepods: []
 
 schema:
+  mqtt_host: str
+  mqtt_port: port
+  mqtt_username: str
+  mqtt_password: password
+  mqtt_discovery_prefix: str
   homepods:
     - name: str
       guid: str
