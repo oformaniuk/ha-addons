@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.155.0
+
+- Updates Codex CLI to version `0.155.0`.
+
 ## 0.154.0
 
 - Pins Codex CLI to version `0.154.0` so Home Assistant can detect and offer Codex updates.

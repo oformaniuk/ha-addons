@@ -18,7 +18,7 @@ ARG BUILD_ARCH
 ARG TTYD_VERSION=1.7.7
 # Pin this so a Codex upgrade always corresponds to a new add-on release.
 # The update workflow keeps this value current.
-ARG CODEX_VERSION=0.154.0
+ARG CODEX_VERSION=0.155.0
 
 ENV NODE_ENV=production \
     npm_config_update_notifier=false \
