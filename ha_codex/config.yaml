@@ -1,7 +1,7 @@
 ---
 name: "Codex"
 description: "AI coding agent for editing Home Assistant configuration with Codex CLI, ttyd, MCP integration, LSP helpers, and persistent sessions without tmux"
-version: "0.155.0"
+version: "0.155.1"
 slug: "ha_codex"
 url: "https://github.com/openai/codex"
 arch:
