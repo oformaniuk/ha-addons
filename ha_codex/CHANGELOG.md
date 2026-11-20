@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.171.0
+
+- Updates Codex CLI to version `0.171.0`.
+
 ## 0.170.0
 
 - Updates Codex CLI to version `0.170.0`.
